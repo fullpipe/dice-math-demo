@@ -1,0 +1,88 @@
+:host {
+  padding: 5px;
+  display: block;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.roller {
+  line-height: 25px;
+  font-size: 25px;
+  margin: 50px 0;
+
+  display: flex;
+  align-items: center;
+  max-width: 400px;
+
+  .exp-input {
+    position: relative;
+    input {
+      border: none;
+      border-bottom: 4px lightgray solid;
+      border-radius: 0;
+      text-align: center;
+      height: 50px;
+      display: block;
+      width: auto;
+      &.has-error {
+        border-bottom-color: red;
+      }
+    }
+
+    .error {
+      position: absolute;
+      bottom: -25px;
+      text-align: center;
+      font-size: 13px;
+      color: red;
+    }
+  }
+
+  .arrow {
+  }
+
+  .result {
+    span {
+      margin: auto 10px;
+      display: inline-block;
+    }
+  }
+  .reroll {
+    background: none;
+    border: none;
+    color: grey;
+
+    span {
+      margin: auto 10px;
+      display: inline-block;
+    }
+
+    &.active {
+      color: green;
+    }
+  }
+}
+
+.dices {
+  list-style: none;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  li {
+    margin: 0 0 10px 0;
+
+    button {
+      background: none;
+      border: none;
+      border: 1px dotted lightgrey;
+      border-radius: 5px;
+      color: indigo;
+      // padding: 7px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+
+      cursor: pointer;
+      max-width: 150px;
+    }
+  }
+}

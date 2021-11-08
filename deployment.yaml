@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dice-math
+  namespace: dice-math
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dice-math
+  template:
+    metadata:
+      labels:
+        app: dice-math
+    spec:
+      containers:
+        - name: dice-math
+          image: fullpipe/dice-math-demo:latest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "50m"
+              memory: "128Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dice-math
+  namespace: dice-math
+spec:
+  ports:
+    - name: http
+      targetPort: 8080
+      port: 8080
+  selector:
+    app: dice-math
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dice-math-route
+  namespace: dice-math
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`dice-math.fullpipe.dev`)
+      kind: Rule
+      services:
+        - name: dice-math
+          port: 8080
+  tls:
+    secretName: dice-math.fullpipe.dev-cert
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dice-math.fullpipe.dev-cert
+  namespace: dice-math
+spec:
+  commonName: dice-math.fullpipe.dev
+  secretName: dice-math.fullpipe.dev-cert
+  dnsNames:
+    - dice-math.fullpipe.dev
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

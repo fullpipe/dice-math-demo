@@ -1,0 +1,30 @@
+<div class="roller">
+  <div class="exp-input">
+    <input
+      [class.has-error]="error"
+      type="text"
+      [formControl]="exp"
+      placeholder="Enter dice expression"
+    />
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </div>
+
+  <div class="arrow"><span>&#8594;</span></div>
+  <div class="result">
+    <span>{{ rolled ? rolled : "?" }}</span>
+  </div>
+  <button
+    class="reroll"
+    [class.active]="rolled"
+    (click)="reroll()"
+    title="reroll"
+  >
+    &#8634;
+  </button>
+</div>
+
+<ul class="dices">
+  <li *ngFor="let dice of dices">
+    <button (click)="roll(dice.exp)">{{ dice.exp }}</button> - {{ dice.info }}
+  </li>
+</ul>
