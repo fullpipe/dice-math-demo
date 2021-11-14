@@ -3,5 +3,28 @@
   box-sizing: border-box;
 }
 
+html,
 body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+footer {
+  flex-shrink: 0;
+  padding: 20px 0;
+  text-align: center;
+
+  a {
+    color: grey;
+    text-decoration: none;
+  }
 }
