@@ -1,68 +1,61 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dice-math
-  namespace: dice-math
+  name: dice-math-demo
+  labels:
+    app: dice-math-demo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dice-math
+      app: dice-math-demo
   template:
     metadata:
       labels:
-        app: dice-math
+        app: dice-math-demo
     spec:
       containers:
-        - name: dice-math
-          image: fullpipe/dice-math-demo:latest
+        - name: dice-math-demo
+          image: registry.gitlab.com/fullpipe/registry/dice-math-demo:latest
           imagePullPolicy: Always
           resources:
             limits:
               cpu: "50m"
-              memory: "128Mi"
-
+              memory: "64Mi"
+      imagePullSecrets:
+        - name: gitlab-registry-secret
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: dice-math
-  namespace: dice-math
+  name: dice-math-demo
 spec:
   ports:
     - name: http
       targetPort: 8080
       port: 8080
   selector:
-    app: dice-math
+    app: dice-math-demo
+
 ---
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: dice-math-route
-  namespace: dice-math
+  name: dice-math-demo
 spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`dice-math.fullpipe.dev`)
-      kind: Rule
-      services:
-        - name: dice-math
-          port: 8080
+  ingressClassName: 'traefik'
   tls:
-    secretName: dice-math.fullpipe.dev-cert
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: dice-math.fullpipe.dev-cert
-  namespace: dice-math
-spec:
-  commonName: dice-math.fullpipe.dev
-  secretName: dice-math.fullpipe.dev-cert
-  dnsNames:
-    - dice-math.fullpipe.dev
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
+    - hosts:
+        - dice-math.fullpipe.dev
+      secretName: dice-math.fullpipe.dev-tls
+  rules:
+    - host: dice-math.fullpipe.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dice-math-demo
+                port:
+                  name: http

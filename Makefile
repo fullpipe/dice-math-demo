@@ -1,8 +1,7 @@
+.PHONY: build
 build:
-	docker build -t fullpipe/dice-math-demo .
+	docker build --platform=linux/amd64 --target release -t registry.gitlab.com/fullpipe/registry/dice-math-demo .
 
 push:
-	docker push fullpipe/dice-math-demo
+	docker push registry.gitlab.com/fullpipe/registry/dice-math-demo:latest
 
-deploy: build push
-	kubectl -n dice-math rollout restart deployment dice-math

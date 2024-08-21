@@ -1,5 +1,5 @@
 # Build
-FROM node:lts-alpine AS build
+FROM node:16-alpine AS build
 
 WORKDIR /app
 
@@ -10,13 +10,10 @@ COPY . .
 
 RUN npm run build -- --prod
 
-# # App image
-# FROM trion/nginx-angular
+FROM caddy:alpine as release
 
-# COPY --from=build /app/dist/share-secret-frontend/ /usr/share/nginx/html/
-
-
-# App image
-FROM fullpipe/ngserve:latest
+EXPOSE 8080
+COPY  Caddyfile /etc/caddy/Caddyfile
 
 COPY --from=build /app/dist/dice-math-demo/ /app/
+
