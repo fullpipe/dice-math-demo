@@ -18,10 +18,6 @@ spec:
         - name: dice-math-demo
           image: registry.gitlab.com/fullpipe/registry/dice-math-demo:latest
           imagePullPolicy: Always
-          resources:
-            limits:
-              cpu: "50m"
-              memory: "64Mi"
       imagePullSecrets:
         - name: gitlab-registry-secret
 ---
@@ -43,7 +39,7 @@ kind: Ingress
 metadata:
   name: dice-math-demo
 spec:
-  ingressClassName: 'traefik'
+  ingressClassName: "traefik"
   tls:
     - hosts:
         - dice-math.fullpipe.dev
